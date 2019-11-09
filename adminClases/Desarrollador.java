@@ -2,33 +2,45 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+
 public class Des extends JFrame {
-    public boolean T1=false,T2=false,T3=false,T4=false;//son las tareas que puede tener el desarrolladro
-    public JFrame f=new JFrame();
+    boolean t1=false,t2=false,t3=false,t4=false;//esto se debería modificar en función de las tareas que tiene asignadas
+    public boolean tareas[]={t1,t2,t3,t4};//son las tareas que puede tener el desarrollador
+
     public Des() {
-        f.setLayout(null);
+        //setLayout(new FlowLayout(FlowLayout.RIGHT));//estos son experimentos xd
+        //setLayout(null);
+        setLayout(new FlowLayout(FlowLayout.TRAILING));
         setTitle("nom: Tareas");
         JPanel p=new JPanel();
         p.setLayout(null);
         p.setBounds(0,0,360,720);
         p.setBackground(Color.BLUE);
-        f.add(p);
+        add(p);
         setSize(1080,720);
         setVisible(true);
-
+        for(Boolean t:tareas){
+            NuevaTarea(t);
+        }
     }
-    public void setT1(){//Hacer un método así por tarea
+    public void NuevaTarea(Boolean T){
+        if(!T){
+            setT();
+        }
+    }
+    public void setT(){//añade la tarea al frame, pero no funciona como debería :T
         JPanel t=new JPanel();
-        t.setLayout(null);
-        t.setPreferredSize(new Dimension(250,50));
+        t.setLayout(new FlowLayout(FlowLayout.TRAILING));
+        t.setPreferredSize(new Dimension(650,100));
         t.setBackground(Color.RED);
         Button b=new Button("ejemplo");
         t.add(b);
-        f.add(t);
-
+        addImpl(t,b,WIDTH);
+        //validate();
     }
     public static void main(String[] args){
+
         Des des=new Des();
-        des.setT1();
+
     }
 }
