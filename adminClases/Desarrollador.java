@@ -1,46 +1,46 @@
 import java.awt.*;
-import java.awt.event.*;
+//import java.awt.event.*;
 import javax.swing.*;
 
 
 public class Des extends JFrame {
-    boolean t1=false,t2=false,t3=false,t4=false;//esto se debería modificar en función de las tareas que tiene asignadas
+    boolean t1=true,t2=false,t3=false,t4=false;//esto se debería modificar en función de las tareas que tiene asignadas
     public boolean tareas[]={t1,t2,t3,t4};//son las tareas que puede tener el desarrollador
 
     public Des() {
-        //setLayout(new FlowLayout(FlowLayout.RIGHT));//estos son experimentos xd
-        //setLayout(null);
-        setLayout(new FlowLayout(FlowLayout.TRAILING));
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(1080,720);
+        setLayout(null);
         setTitle("nom: Tareas");
+
         JPanel p=new JPanel();
         p.setLayout(null);
         p.setBounds(0,0,360,720);
         p.setBackground(Color.BLUE);
         add(p);
-        setSize(1080,720);
-        setVisible(true);
+
+        JPanel infoTarea=new JPanel();
+        infoTarea.setLayout(null);
+        infoTarea.setBounds(460,200,520,350);
+        infoTarea.setBackground(Color.gray);
+        JButton estado=new JButton("Estado");//esto se modificará según quiera el usuario
+        estado.setBounds(920,325,100,50);
+        estado.setBackground(Color.green);
+        infoTarea.add(estado);//No sé porque no aparece el botón
+        add(infoTarea);
+
         for(Boolean t:tareas){
-            NuevaTarea(t);
+            if(t){
+                JButton numTarea=new JButton("tarea n");//n es el número de la tarea asignada
+                numTarea.setBounds(460,150,150,50);//(460+i*150,150,150,50) donde i es el índice de una de las 4 tareas, en este caso empezando con 0
+                add(numTarea);
+            }
         }
+
+        setVisible(true);
     }
-    public void NuevaTarea(Boolean T){
-        if(!T){
-            setT();
-        }
-    }
-    public void setT(){//añade la tarea al frame, pero no funciona como debería :T
-        JPanel t=new JPanel();
-        t.setLayout(new FlowLayout(FlowLayout.TRAILING));
-        t.setPreferredSize(new Dimension(650,100));
-        t.setBackground(Color.RED);
-        Button b=new Button("ejemplo");
-        t.add(b);
-        addImpl(t,b,WIDTH);
-        //validate();
-    }
+
     public static void main(String[] args){
-
         Des des=new Des();
-
     }
 }
