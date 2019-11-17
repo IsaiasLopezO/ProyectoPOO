@@ -6,21 +6,22 @@
  */
 package mx.unam.fi.Interfaces;
 
+import java.util.List;
 import mx.unam.fi.PersonasBeans.*;
 import mx.unam.fi.Excepciones.*;
 
 public interface DesarrolladorDAO {
     /**
      * Este metodo valida que los datos de inicio de sesion
-     * coincidan con los de cada desarrollador
+     * coincidan con los de cada desarrollador.
      * @param email
-     * @param password
-     * @return boolean resultado de correcto/incorrecto
+     * @param id_desarrollador
+     * @return List resultado de de datos en caso correcto/incorrecto
      * @throws AccesoLoginEx
      */
-    boolean validar(String email, String password) throws AccesoLoginEx;
+    public List<Desarrollador> validar(int id_desarrollador, String email) throws AccesoLoginEx;
     /**
-     * Este metodo permite modificar los datos de una actividad en el proyecto.En palabras más técnicas, es un UPDATE hacia alguna actividad de la base de datos.
+     * Este metodo permite modificar los datos de una actividad en el proyecto.En palabras mas tecnicas, es un UPDATE hacia alguna actividad de la base de datos.
      * @param actividad
      * @return int resultado de las modificaciones realizadas
      * @throws ModificarActEx
