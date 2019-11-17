@@ -1,5 +1,5 @@
 package personas.domain;
-
+//EDICION PARA COMPROBAR CONEXION
 public class Desarrollador {
     private int id_desarrollador;
     private String nombre;
