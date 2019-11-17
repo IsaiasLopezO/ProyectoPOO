@@ -1,4 +1,5 @@
 import java.awt.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -7,9 +8,25 @@ public class AdminPrincipalView extends JFrame{
 	public AdminPrincipalView() {
   	super("Admin: Tareas");
 
+		//Action events, instances
+    WorkBoton wB = new WorkBoton();
+
     //Basic elements of the window
     Container cont = getContentPane();
     cont.setLayout(null);
+
+		//Works contains all existing works
+    //Elements of action pane
+    JScrollPane works = new JScrollPane();
+		works.setBackground(Color.DARK_GRAY);
+
+		//data example
+		String data[][] = {{"IsaLo", "Pausa"},
+												 {"Soto", "Pausa"},
+												 {"Coriel", "Pausa"}};
+    works.setLayout(null);
+    works.setBounds(360,0,920,720);
+		works.add(workPanel("Tarea 1", data));
 
     //Actions contains buttons
     //Elements of actions pane
@@ -22,39 +39,40 @@ public class AdminPrincipalView extends JFrame{
     createWork.addActionListener(wB);
     actions.add(createWork);
 
-    //Works contains all existing works
-    //Elements of action pane
-    JScrollPane works = new JScrollPane();
-		//data example
-		Object[][] data = {"IsaLo", "Pausa"},
-											{"Soto", "Pausa"},
-											{"Coriel", "Pausa"};
-    works.setLayout(null);
-    works.setBounds(360,0,920,50);
-
-    //Action events
-    WorkBoton wB = new WorkBoton();
-
     cont.add(actions);
     cont.add(works);
     setSize(1280,720);
     setVisible(true);
   }
 
-  private JPanel workPanel(String workName, int numC, Object[][] data){
+  private static JPanel workPanel(String workName, String[][] data){
 		//panel will be added on works
     JPanel workPanel = new JPanel();
+		workPanel.setLayout(null);
+
     //Work tittle settings
-    JLabel workHeader = new JLabel(workName);
-    workHeader.setBounds(0, 0, 300, 300);
-    workHeader.setBackground(Color.gray);
+    //JLabel workHeader = new JLabel(workName);
+    //workHeader.setBounds(200, 200, 100, 100);
+    //workHeader.setBackground(Color.WHITE);
+
 		//Scroll Panel
 		JScrollPane collaborators = new JScrollPane();
-    //TableModel with collaborators
-    String[] rowsName = {"Nombre", "Commits","Estado"} //Data tittles
+		collaborators.setBounds(0,200,500,500);
+
+		//TableModel with collaborators
+    String[] rowsName = {"Nombre", "Commits","Estado"}; //Data tittles
     DefaultTableModel table = new DefaultTableModel(data, rowsName);
 		JTable colTable = new JTable(table); //Real table
-		workPanel.add(w)
+		colTable.setBounds(0,0,400,400);
+		colTable.setBackground(Color.orange);
+		collaborators.add(colTable);
+
+		//adding to principal Panel
+		//workPanel.add(workHeader);
+		workPanel.add(collaborators);
+		workPanel.setSize(960,600);
+		workPanel.setVisible(true);
+		workPanel.setBackground(Color.magenta);
     return workPanel;
   }
 
