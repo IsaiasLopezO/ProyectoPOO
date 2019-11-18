@@ -16,10 +16,10 @@ public interface DesarrolladorDAO {
      * coincidan con los de cada desarrollador.
      * @param email
      * @param id_desarrollador
-     * @return List resultado de de datos en caso correcto/incorrecto
+     * @return String resultado de de datos en caso correcto/incorrecto
      * @throws AccesoLoginEx
      */
-    public List<Desarrollador> validar(int id_desarrollador, String email) throws AccesoLoginEx;
+    public String validar(String id_desarrollador, String email) throws AccesoLoginEx;
     /**
      * Este metodo permite modificar los datos de una actividad en el proyecto.En palabras mas tecnicas, es un UPDATE hacia alguna actividad de la base de datos.
      * @param actividad
@@ -27,4 +27,12 @@ public interface DesarrolladorDAO {
      * @throws ModificarActEx
      */
     int modificarAct(Actividad actividad) throws ModificarActEx;
+    /**
+     * Este metodo permite ver las actividades de cada desarrollador
+     * @param id_desarrollador
+     * @param campoAct
+     * @return List de actividades a ver
+     * @throws VerActividadesEx
+     */
+    public List<Actividad> verAct(String id_desarrollador, int campoAct) throws VerActividadesEx;
 }
