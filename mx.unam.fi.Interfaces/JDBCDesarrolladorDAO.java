@@ -10,8 +10,8 @@
 package mx.unam.fi.Interfaces;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import javax.swing.JOptionPane;
 import mx.unam.fi.Excepciones.*;
 import mx.unam.fi.PersonasBeans.*;
 
@@ -27,6 +27,8 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
     //para el método de eliminar, pues no queremos eliminar la plantilla Actividad, si no
     //que vaciaremos lo que existe en el objeto Actividad
     private static final String SQL_UPDATE = "UPDATE actividad SET nombre1=?, status1=?, nombre2=?, status2=?, nombre3=?, status3=?, nombre4=?, status4=? WHERE id_actividad = ?";
+    //"UPDATE actividad SET nombre1=?, status1=?, nombre2=?, status2=?, nombre3=?, status3=?, nombre4=?, status4=? WHERE id_actividad = ?";
+    private static final String SQL_SELECT = "SELECT * FROM actividad WHERE id_actividad = ?";
 
     public JDBCDesarrolladorDAO(){}
     /**
@@ -43,18 +45,15 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
      * Este metodo valida que los datos de inicio de sesion coincidan con los de cada desarrollador.
      * @param id_desarrollador
      * @param email
-     * @return List resultado de los datos del usuario que ha iniciado sesion
+     * @return Desarrollador resultado de los datos del usuario que ha iniciado sesion
      * @throws AccesoLoginEx
      */
     @Override
-    public List<Desarrollador> validar(int id_desarrollador, String email) throws AccesoLoginEx{
+    public String validar(String id_desarrollador, String email) throws AccesoLoginEx{
         //Sentencias SQL para conectarnos
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Desarrollador desarrollador = null;
-
-        List<Desarrollador> desarrolladorDatos = new ArrayList<Desarrollador>();
 
          try {
             //Lo que recibe el objeto conn es lo siguiente:
@@ -63,25 +62,23 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
             conn = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
             System.out.println("EJECUTANDO QUERY:" + SQL_SEARCH);
             stmt = conn.prepareStatement(SQL_SEARCH);
-            stmt.setInt(1, id_desarrollador);
+            stmt.setString(1, id_desarrollador);
             rs = stmt.executeQuery();
             //Recorre sobre la tabla
             if(rs.next()){
                 //Encuentra la coincidencia de los datos insertados en el login
                 if(rs.getString("email").equals(email)){
-                    desarrollador = new Desarrollador();
-                    desarrollador.setId_desarrollador(id_desarrollador);
-                    desarrollador.setNombre(rs.getString("nombre"));
-                    desarrollador.setApellido(rs.getString("apellido"));
-
-                    desarrolladorDatos.add(desarrollador);
-                    System.out.println("Bienvenido: " + desarrollador);
+                    JOptionPane.showMessageDialog(null,"Acceso correcto");
+                    return id_desarrollador;
+                    //System.out.println("Bienvenido: " + desarrolladorDatos);
                 //En caso contrario, no puede entrar
                 }else{
-                    System.out.println("DATOS INCORRECTOS");
+                    JOptionPane.showMessageDialog(null,"Usuario/Contrasena incorrecto");
+                    //System.out.println("DATOS INCORRECTOS");
                 }
             }else{
-                System.out.println("NO HAY DATOS ENCONTRADOS");
+                JOptionPane.showMessageDialog(null,"NO HAY DATOS ENCONTRADOS");
+                //System.out.println("NO HAY DATOS ENCONTRADOS");
             }
         }catch (SQLException ex) {
             //Imprime el rastro de la excepcion
@@ -98,7 +95,73 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
             }
         }
         //Datos del desarrollador que ingresó
-        return desarrolladorDatos;
+        return null;
+    }
+    /**
+     * Este metodo permite visualizar todos los datos de todas las actividades del desarrollador
+     * @param id_desarrollador
+     * @return List actividades
+     * @throws VerActividadesEx
+     */
+    @Override
+    public List<Actividad> verAct(String id_desarrollador, int campoAct) throws VerActividadesEx{
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Actividad actividad = null;
+
+        List<Actividad> actividades = new ArrayList<Actividad>();
+
+        try {
+            conn = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
+            System.out.println("EJECUTANDO QUERY:" + SQL_SELECT);
+            stmt = conn.prepareStatement(SQL_SELECT);
+            stmt.setString(1, id_desarrollador);
+            rs = stmt.executeQuery();
+            if(rs.next()){
+
+                int id_actividad = rs.getInt("id_actividad");
+                actividad = new Actividad();
+                actividad.setId_actividad(id_actividad);
+                //Se valida qué campo en la actividad es para que no siempre inicie valores
+                if(campoAct == 1){
+                    String nombre1 = rs.getString("nombre1");
+                    String status1 = rs.getString("status1");
+                    actividad.setNombre1(nombre1);
+                    actividad.setStatus1(status1);
+                }
+                if(campoAct == 2){
+                    String nombre2 = rs.getString("nombre2");
+                    String status2 = rs.getString("status2");
+                    actividad.setNombre2(nombre2);
+                    actividad.setStatus2(status2);
+                }
+                if(campoAct == 3){
+                    String nombre3 = rs.getString("nombre3");
+                    String status3 = rs.getString("status3");
+                    actividad.setNombre3(nombre3);
+                    actividad.setStatus3(status3);
+                }
+                if(campoAct ==4){
+                    String nombre4 = rs.getString("nombre4");
+                    String status4 = rs.getString("status4");
+                    actividad.setNombre4(nombre4);
+                    actividad.setStatus4(status4);
+                }
+
+                //Va a recibir una i que indicará qué actividad se desea ver
+                actividades.add(actividad);
+            }
+        }catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+        } finally{
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if(this.conexionTransaccional == null){
+                Conexion.close(conn);
+            }
+        }
+        return actividades;
     }
     /**
      * Este metodo permite modificar los datos de una actividad en el proyecto.
@@ -131,7 +194,8 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
 
             rows = stmt.executeUpdate();
 
-            System.out.println("Actividades modificadas: " + rows);
+            JOptionPane.showMessageDialog(null,"Actividades modificadas correctamente: " + rows);
+            //System.out.println("Actividades modificadas: " + rows);
         }catch (SQLException ex) {
             ex.printStackTrace(System.out);
         } finally{
