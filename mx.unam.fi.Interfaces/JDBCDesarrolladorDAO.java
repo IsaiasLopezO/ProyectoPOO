@@ -10,7 +10,6 @@
 package mx.unam.fi.Interfaces;
 
 import java.sql.*;
-import java.util.*;
 import javax.swing.JOptionPane;
 import mx.unam.fi.Excepciones.*;
 import mx.unam.fi.PersonasBeans.*;
@@ -26,8 +25,8 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
     //Actualiza todo el contenido de alguna actividad. Esta variable también será utilizada
     //para el método de eliminar, pues no queremos eliminar la plantilla Actividad, si no
     //que vaciaremos lo que existe en el objeto Actividad
-    private static final String SQL_UPDATE = "UPDATE actividad SET nombre1=?, status1=?, nombre2=?, status2=?, nombre3=?, status3=?, nombre4=?, status4=? WHERE id_actividad = ?";
-    //"UPDATE actividad SET nombre1=?, status1=?, nombre2=?, status2=?, nombre3=?, status3=?, nombre4=?, status4=? WHERE id_actividad = ?";
+    private static final String SQL_UPDATE = "UPDATE actividad SET status1=?, status2=?, status3=?, status4=? WHERE id_actividad = ?";
+
     private static final String SQL_SELECT = "SELECT * FROM actividad WHERE id_actividad = ?";
 
     public JDBCDesarrolladorDAO(){}
@@ -100,17 +99,15 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
     /**
      * Este metodo permite visualizar todos los datos de todas las actividades del desarrollador
      * @param id_desarrollador
-     * @return List actividades
+     * @return Actividad
      * @throws VerActividadesEx
      */
     @Override
-    public List<Actividad> verAct(String id_desarrollador, int campoAct) throws VerActividadesEx{
+    public Actividad verAct(String id_desarrollador) throws VerActividadesEx{
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Actividad actividad = null;
-
-        List<Actividad> actividades = new ArrayList<Actividad>();
 
         try {
             conn = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
@@ -119,38 +116,27 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
             stmt.setString(1, id_desarrollador);
             rs = stmt.executeQuery();
             if(rs.next()){
-
                 int id_actividad = rs.getInt("id_actividad");
                 actividad = new Actividad();
                 actividad.setId_actividad(id_actividad);
-                //Se valida qué campo en la actividad es para que no siempre inicie valores
-                if(campoAct == 1){
-                    String nombre1 = rs.getString("nombre1");
-                    String status1 = rs.getString("status1");
-                    actividad.setNombre1(nombre1);
-                    actividad.setStatus1(status1);
-                }
-                if(campoAct == 2){
-                    String nombre2 = rs.getString("nombre2");
-                    String status2 = rs.getString("status2");
-                    actividad.setNombre2(nombre2);
-                    actividad.setStatus2(status2);
-                }
-                if(campoAct == 3){
-                    String nombre3 = rs.getString("nombre3");
-                    String status3 = rs.getString("status3");
-                    actividad.setNombre3(nombre3);
-                    actividad.setStatus3(status3);
-                }
-                if(campoAct ==4){
-                    String nombre4 = rs.getString("nombre4");
-                    String status4 = rs.getString("status4");
-                    actividad.setNombre4(nombre4);
-                    actividad.setStatus4(status4);
-                }
 
-                //Va a recibir una i que indicará qué actividad se desea ver
-                actividades.add(actividad);
+                String nombre1 = rs.getString("nombre1");
+                String status1 = rs.getString("status1");
+                String nombre2 = rs.getString("nombre2");
+                String status2 = rs.getString("status2");
+                String nombre3 = rs.getString("nombre3");
+                String status3 = rs.getString("status3");
+                String nombre4 = rs.getString("nombre4");
+                String status4 = rs.getString("status4");
+
+                actividad.setNombre1(nombre1);
+                actividad.setStatus1(status1);
+                actividad.setNombre2(nombre2);
+                actividad.setStatus2(status2);
+                actividad.setNombre3(nombre3);
+                actividad.setStatus3(status3);
+                actividad.setNombre4(nombre4);
+                actividad.setStatus4(status4);
             }
         }catch (SQLException ex) {
             ex.printStackTrace(System.out);
@@ -161,7 +147,7 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
                 Conexion.close(conn);
             }
         }
-        return actividades;
+        return actividad;
     }
     /**
      * Este metodo permite modificar los datos de una actividad en el proyecto.
@@ -181,20 +167,15 @@ public class JDBCDesarrolladorDAO implements DesarrolladorDAO{
             System.out.println("EJECUTANDO QUERY: " + SQL_UPDATE);
             stmt = conn.prepareStatement(SQL_UPDATE);
 
-            stmt.setString(1, actividad.getNombre1());
-            stmt.setString(2, actividad.getStatus1());
-            stmt.setString(3, actividad.getNombre2());
-            stmt.setString(4, actividad.getStatus2());
-            stmt.setString(5, actividad.getNombre3());
-            stmt.setString(6, actividad.getStatus3());
-            stmt.setString(7, actividad.getNombre4());
-            stmt.setString(8, actividad.getStatus4());
+            stmt.setString(1, actividad.getStatus1());
+            stmt.setString(2, actividad.getStatus2());
+            stmt.setString(3, actividad.getStatus3());
+            stmt.setString(4, actividad.getStatus4());
             //Parámetro que nos indica elemento a modificar
-            stmt.setInt(9, actividad.getId_actividad());
-
+            stmt.setInt(5, actividad.getId_actividad());
             rows = stmt.executeUpdate();
 
-            JOptionPane.showMessageDialog(null,"Actividades modificadas correctamente: " + rows);
+            JOptionPane.showMessageDialog(null,"Estado modificado correctamente");
             //System.out.println("Actividades modificadas: " + rows);
         }catch (SQLException ex) {
             ex.printStackTrace(System.out);
