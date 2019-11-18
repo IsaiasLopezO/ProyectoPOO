@@ -60,8 +60,6 @@ public class AdminPrincipalView extends JFrame{
                     {"Coriel", "Pausa"}};
 
 		//Works contains all existing works
-    //Elements of action pane
-    //JScrollPane aux = new JScrollPane();
     aux.setBackground(Color.DARK_GRAY);
     aux.setLayout(null);
     aux.add(workPanel("Tarea 1", data));
@@ -156,8 +154,8 @@ public class AdminPrincipalView extends JFrame{
 
     public void createNewWorkPanel() {
       String name = JOptionPane.showInputDialog(AdminPrincipalView.this, "Nombre:");
-      String[][] xd = { {name, "Asignada" } };
-      AdminPrincipalView.aux.add(workPanel("Tarea " + AdminPrincipalView.numOfWorks, xd));
+      String[][] developer = { {name, "Asignada" } };
+      AdminPrincipalView.aux.add(workPanel("Tarea " + AdminPrincipalView.numOfWorks, developer));
       aux.setPreferredSize(new Dimension(645 * numOfWorks, 680));
       AdminPrincipalView.works.setViewportView(aux);
     }
