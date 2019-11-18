@@ -4,10 +4,13 @@ import javafx.scene.control.ChoiceBox;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.plaf.ComponentUI;
 
 public class AdminPrincipalView extends JFrame{
 
   static int numOfWorks = 0;
+  static JScrollPane works = new JScrollPane();
+  static JScrollPane aux = new JScrollPane();
 
 	public AdminPrincipalView() {
   	super("Admin: Tareas");
@@ -18,22 +21,58 @@ public class AdminPrincipalView extends JFrame{
     String data[][] = {{"IsaLo", "Pausa"},
                     {"Soto", "Pausa"},
                     {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"},{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
                     {"Coriel", "Pausa"}};
 
 		//Works contains all existing works
     //Elements of action pane
-    JPanel aux = new JPanel();
-    aux.setBackground(Color.GRAY);
+    //JScrollPane aux = new JScrollPane();
+    aux.setBackground(Color.DARK_GRAY);
     aux.setLayout(null);
     aux.add(workPanel("Tarea 1", data));
-    aux.add(workPanel("Tarea 1", data));
-    aux.add(workPanel("Tarea 1", data));
-    aux.setBounds(0,0,645*numOfWorks,720);
+    aux.add(workPanel("Tarea 2", data));
+    aux.add(workPanel("Tarea 3", data));
+    aux.add(workPanel("Tarea 4", data));
+    aux.setPreferredSize(new Dimension(645*numOfWorks-(200),680));
 
-    JScrollPane works = new JScrollPane(aux);
-    works.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    works.setLocation(150,0);
-    works.setPreferredSize(new Dimension(640,710));
+    works.setViewportView(aux);
+    works.setPreferredSize(new Dimension(500,680));
+    works.setBounds(260,0,640,680);
 
     //Actions contains buttons
     //Elements of actions pane
@@ -49,6 +88,7 @@ public class AdminPrincipalView extends JFrame{
     deleteWork.setBounds(50,250,150,50);
     deleteWork.addActionListener(wB);
     actions.add(deleteWork);
+
 
     setLayout(null);
     add(actions);
@@ -79,7 +119,8 @@ public class AdminPrincipalView extends JFrame{
     };
 		final JTable colTable = new JTable(table); //Real table
 		colTable.setBounds(0,0,400,200);
-		colTable.setBackground(Color.WHITE);
+    colTable.setBackground(Color.WHITE);
+    collaborators.setLayout(new ScrollPaneLayout());
     collaborators.setViewportView(colTable);
 		collaborators.setBounds(0,100,400,300);
 
@@ -87,7 +128,7 @@ public class AdminPrincipalView extends JFrame{
 		workPanel.add(workHeader);
 		workPanel.add(collaborators);
 		workPanel.setVisible(true);
-    workPanel.setBackground(Color.gray);
+    workPanel.setBackground(Color.lightGray);
     workPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.WHITE));
     workPanel.setBounds(100+(numOfWorks*600), 160, 400, 400);
     numOfWorks++;
@@ -100,14 +141,34 @@ public class AdminPrincipalView extends JFrame{
   }
 
   private class WorkBoton implements ActionListener {
-  	public void actionPerformed(ActionEvent e) {
-      if(e.getActionCommand() == "Crear tarea"){
-        JOptionPane.showMessageDialog(AdminPrincipalView.this, "Una tarea fue creada"); 
+    public void actionPerformed(ActionEvent e) {
+      WorkBoton wb = new WorkBoton();
+      if (e.getActionCommand() == "Crear tarea") {
+        wb.createNewWorkPanel();
+        JOptionPane.showMessageDialog(AdminPrincipalView.this, "Una tarea fue creada");
       }
 
-      if(e.getActionCommand() == "Borrar tarea"){
-        JOptionPane.showMessageDialog(AdminPrincipalView.this, "Una tarea fue borrada"); 
+      if (e.getActionCommand() == "Borrar tarea") {
+        wb.deleteWorkPanel();
+        JOptionPane.showMessageDialog(AdminPrincipalView.this, "Una tarea fue borrada");
       }
+    }
+
+    public void createNewWorkPanel() {
+      String name = JOptionPane.showInputDialog(AdminPrincipalView.this, "Nombre:");
+      String[][] xd = { {name, "Asignada" } };
+      AdminPrincipalView.aux.add(workPanel("Tarea " + AdminPrincipalView.numOfWorks, xd));
+      aux.setPreferredSize(new Dimension(645 * numOfWorks, 680));
+      AdminPrincipalView.works.setViewportView(aux);
+    }
+
+    public void deleteWorkPanel(){
+      Component[] worksPanels = AdminPrincipalView.aux.getComponents();
+      int x = worksPanels.length;
+      AdminPrincipalView.aux.remove(worksPanels[x-1]);
+      numOfWorks--;
+      aux.setPreferredSize(new Dimension(645 * numOfWorks, 680));
+      AdminPrincipalView.works.setViewportView(aux);
     }
   }
 }
