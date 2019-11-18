@@ -1,9 +1,13 @@
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
+import javafx.scene.control.ChoiceBox;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 
 public class AdminPrincipalView extends JFrame{
+
+  static int numOfWorks = 0;
 
 	public AdminPrincipalView() {
   	super("Admin: Tareas");
@@ -11,68 +15,82 @@ public class AdminPrincipalView extends JFrame{
 		//Action events, instances
     WorkBoton wB = new WorkBoton();
 
-    //Basic elements of the window
-    Container cont = getContentPane();
-    cont.setLayout(null);
+    String data[][] = {{"IsaLo", "Pausa"},
+                    {"Soto", "Pausa"},
+                    {"Coriel", "Pausa"},
+                    {"Coriel", "Pausa"}};
 
 		//Works contains all existing works
     //Elements of action pane
-    JScrollPane works = new JScrollPane();
-		works.setBackground(Color.DARK_GRAY);
+    JPanel aux = new JPanel();
+    aux.setBackground(Color.GRAY);
+    aux.setLayout(null);
+    aux.add(workPanel("Tarea 1", data));
+    aux.add(workPanel("Tarea 1", data));
+    aux.add(workPanel("Tarea 1", data));
+    aux.setBounds(0,0,645*numOfWorks,720);
 
-		//data example
-		String data[][] = {{"IsaLo", "Pausa"},
-												 {"Soto", "Pausa"},
-												 {"Coriel", "Pausa"}};
-    works.setLayout(null);
-    works.setBounds(360,0,920,720);
-		works.add(workPanel("Tarea 1", data));
+    JScrollPane works = new JScrollPane(aux);
+    works.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    works.setLocation(150,0);
+    works.setPreferredSize(new Dimension(640,710));
 
     //Actions contains buttons
     //Elements of actions pane
     JPanel actions = new JPanel();
     actions.setLayout(null);
-    actions.setBounds(0,0,360,720);
-    actions.setBackground(Color.blue);
-    JButton createWork = new JButton("Crear nueva tarea");
-    createWork.setBounds(90,100,200,50);
+    actions.setBounds(0,0,260,720);
+    actions.setBackground(Color.BLUE);
+    JButton createWork = new JButton("Crear tarea"); //Work Button
+    createWork.setBounds(50,100,150,50);
     createWork.addActionListener(wB);
     actions.add(createWork);
+    JButton deleteWork = new JButton("Borrar tarea"); //Work Button
+    deleteWork.setBounds(50,250,150,50);
+    deleteWork.addActionListener(wB);
+    actions.add(deleteWork);
 
-    cont.add(actions);
-    cont.add(works);
-    setSize(1280,720);
+    setLayout(null);
+    add(actions);
+    add(works);
+    setSize(900,720);
     setVisible(true);
   }
 
   private static JPanel workPanel(String workName, String[][] data){
 		//panel will be added on works
     JPanel workPanel = new JPanel();
-		workPanel.setLayout(null);
+    workPanel.setLayout(null);
 
     //Work tittle settings
-    //JLabel workHeader = new JLabel(workName);
-    //workHeader.setBounds(200, 200, 100, 100);
-    //workHeader.setBackground(Color.WHITE);
+    JLabel workHeader = new JLabel(workName);
+    workHeader.setBounds(180, 0, 100, 100);
 
 		//Scroll Panel
-		JScrollPane collaborators = new JScrollPane();
-		collaborators.setBounds(0,200,500,500);
+    JScrollPane collaborators = new JScrollPane();
 
 		//TableModel with collaborators
-    String[] rowsName = {"Nombre", "Commits","Estado"}; //Data tittles
-    DefaultTableModel table = new DefaultTableModel(data, rowsName);
-		JTable colTable = new JTable(table); //Real table
-		colTable.setBounds(0,0,400,400);
-		colTable.setBackground(Color.orange);
-		collaborators.add(colTable);
+    String[] rowsName = {"Nombre","Estado"}; //Data tittles
+    DefaultTableModel table = new DefaultTableModel(data, rowsName){
+      @Override
+      public boolean isCellEditable(int row, int column) {
+        return false;
+      }
+    };
+		final JTable colTable = new JTable(table); //Real table
+		colTable.setBounds(0,0,400,200);
+		colTable.setBackground(Color.WHITE);
+    collaborators.setViewportView(colTable);
+		collaborators.setBounds(0,100,400,300);
 
-		//adding to principal Panel
-		//workPanel.add(workHeader);
+    //adding to principal Panel
+		workPanel.add(workHeader);
 		workPanel.add(collaborators);
-		workPanel.setSize(960,600);
 		workPanel.setVisible(true);
-		workPanel.setBackground(Color.magenta);
+    workPanel.setBackground(Color.gray);
+    workPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.WHITE));
+    workPanel.setBounds(100+(numOfWorks*600), 160, 400, 400);
+    numOfWorks++;
     return workPanel;
   }
 
@@ -83,7 +101,13 @@ public class AdminPrincipalView extends JFrame{
 
   private class WorkBoton implements ActionListener {
   	public void actionPerformed(ActionEvent e) {
-    	JOptionPane.showMessageDialog(AdminPrincipalView.this, "Una tarea fue creada");
+      if(e.getActionCommand() == "Crear tarea"){
+        JOptionPane.showMessageDialog(AdminPrincipalView.this, "Una tarea fue creada"); 
+      }
+
+      if(e.getActionCommand() == "Borrar tarea"){
+        JOptionPane.showMessageDialog(AdminPrincipalView.this, "Una tarea fue borrada"); 
+      }
     }
   }
 }
