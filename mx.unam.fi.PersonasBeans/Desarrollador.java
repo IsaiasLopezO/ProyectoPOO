@@ -9,18 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Desarrollador {
-    private int id_desarrollador;
+    private String id_desarrollador;
     private String nombre;
     private String apellido;
     private String password;
     private String email;
     private List<Actividad> actividades = new ArrayList<Actividad>();
 
-    public int getId_desarrollador() {
+    public String getId_desarrollador() {
         return id_desarrollador;
     }
 
-    public void setId_desarrollador(int id_desarrollador) {
+    public void setId_desarrollador(String id_desarrollador) {
         this.id_desarrollador = id_desarrollador;
     }
 
