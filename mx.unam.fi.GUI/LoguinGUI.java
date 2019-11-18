@@ -4,40 +4,46 @@
  */
 package mx.unam.fi.GUI;
 
+import mx.unam.fi.Interfaces.*;
+import java.sql.*;
+import mx.unam.fi.Excepciones.*;
+
+
 import java.awt.event.*;
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class LoginGUI {
     private final JPanel panel = new JPanel();
     public static JFrame frame = new JFrame("LOGIN");
-
-    public static void main(String[] args) {
-        LoginGUI loginGUI = new LoginGUI();
-    }
+    Connection conexion = null;
+    String id_desarrollador = null;
     /**
      * El constructor recibe todas las partes de la interfaz
      */
     public LoginGUI(){
-	insertLabels();
-	//Botón recibido de iniciar sesión
-	JButton boton = insertButton();
-	insertTextBox(boton);
+            insertLabels();
+            //Botón recibido de iniciar sesión
+            JButton boton = insertButton();
 
-	panel.setBackground(Color.CYAN);
-        //Se agrega el panel a la ventana
-	frame.add(panel);
-	//Creación de capa principal
-	frame.add(panel);
-	frame.setSize(500,500);
-	frame.setLocationRelativeTo(null);//null->CENTRO, es como un location
-	//No es moldeable la capa
-	frame.setResizable(false);
-	frame.setVisible(true);
-	//Cierra el programa
-	frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-	//Mata al programa una vez cerrado
-	frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+            panel.setBackground(Color.CYAN);
+            //Se agrega el panel a la ventana
+            frame.add(panel);
+            //Creación de capa principal
+            frame.add(panel);
+            frame.setSize(500,500);
+            frame.setLocationRelativeTo(null);//null->CENTRO, es como un location
+            //No es moldeable la capa
+            frame.setResizable(false);
+            frame.setVisible(true);
+            //Cierra el programa
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            //Mata al programa una vez cerrado
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
     }
     /**
      * El metodo inserta las etiquetas como lo son las imagenes de la UNAM y de la FI,
@@ -104,15 +110,41 @@ public class LoginGUI {
 	panel.add(correo);
 	panel.add(password);
 
-	boton.addActionListener((ActionEvent ae) -> {
-            if(correo.getText().equals("admin") && String.valueOf(password.getPassword()).equals("admin")){
-                //Cierra la ventana 1
-                frame.setVisible(false);
-                //Abre la siguiente ventana
-
-            }else{
-                JOptionPane.showMessageDialog(null,"Usuario/Contrasena incorrecto");
+        try {
+            conexion = Conexion.getConnection();
+            if(conexion.getAutoCommit()){
+                conexion.setAutoCommit(false);
             }
-        });
+
+            JDBCDesarrolladorDAO desarrolladorJDBC = new JDBCDesarrolladorDAO(conexion);
+
+            boton.addActionListener((ActionEvent ae) -> {
+                try {
+
+
+                    id_desarrollador = desarrolladorJDBC.validar((String.valueOf(password.getPassword())), correo.getText());
+
+                    if(id_desarrollador!=null){
+                        //Cierra la ventana 1
+                        frame.setVisible(false);
+                        //Abre la siguiente ventana AQUI SE PASA EL ID_DESARROLLADOR
+
+                    }
+                } catch (AccesoLoginEx ex) {
+                    Logger.getLogger(LoginGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+
+        }catch (SQLException ex) {
+            ex.printStackTrace(System.out);
+            //Hacer rollback sucede cuando, en caso de que falle,
+            //no se guardan las modificaciones. Las operaciones no se ejecutan
+            JOptionPane.showMessageDialog(null,"La operacion no ha sido ejecutada. (ROLLBACK)");
+            /*try {
+                conexion.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace(System.out);
+            }*/
+        }
     }
 }
