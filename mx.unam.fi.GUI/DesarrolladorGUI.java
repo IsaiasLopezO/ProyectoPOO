@@ -22,20 +22,18 @@ public class DesarrolladorGUI{
     Connection conexion = null;
     JDBCDesarrolladorDAO desarrolladorJDBC = new JDBCDesarrolladorDAO(conexion);
     Actividad actividad = new Actividad();
-
-    public static void main(String[] args){//Esto es solo para probar que si funciona
-        DesarrolladorGUI desarrolladorGUI =new DesarrolladorGUI("1");
-    }
-
+   /**
+    * El constructor recibe todas las partes de la interfaz
+    * @param id_desarrollador
+    */
     public DesarrolladorGUI(String id_desarrollador){
 
         frame.setSize(1080,720);
         frame.setLayout(null);
         frame.setResizable(false);
         panel.setLayout(null);
-        panel.setBounds(0,0,360,720);
+        panel.setBounds(0,0,260,720);
         panel.setBackground(Color.BLUE);
-
         mostrarActividades(id_desarrollador);
         //insertLabels();
 
@@ -44,10 +42,11 @@ public class DesarrolladorGUI{
 
         //Cierra el programa
 	frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-	//Mata al programa una vez cerrado
-	frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
-
+    /**
+     * El metodo muestra todas las actividades del respectivo desarrollador
+     * @param id_desarrollador
+     */
     private void mostrarActividades(String id_desarrollador){
         for(Boolean a:actividades){//Crea un panel por tarea
             if(a){//Aquí se debería poner algo que reciba los datos de la tarea y los agregue al panel
@@ -63,7 +62,11 @@ public class DesarrolladorGUI{
             }
         }
     }
-
+    /**
+     * El metodo inserta las etiquetas necesarias para la ventana del desarrollador
+     * @param contador
+     * @param id_desarrollador
+     */
     private void insertLabels(int contador, String id_desarrollador){
         JLabel actividadEt = new JLabel();
         actividadEt.setLayout(null);
@@ -105,7 +108,11 @@ public class DesarrolladorGUI{
             JOptionPane.showMessageDialog(null,"Error: La operacion insertar label no ha sido ejecutada.(ROLLBACK)");
         }
     }
-
+    /**
+     * El metodo agrega listas desplegables para cambiar el estado
+     * @param contador
+     * @return
+     */
     private JComboBox listasDesplegables(int contador){
         String [] estados = {"Pendiente","En Progreso","Terminado","Entregado"};
         JComboBox listaDesplegable1 = new JComboBox(estados);
@@ -187,9 +194,5 @@ public class DesarrolladorGUI{
         });
 
         return listaDesplegable1;
-    }
-
-    private void modificarEstado(){
-
     }
 }

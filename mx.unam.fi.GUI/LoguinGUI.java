@@ -27,7 +27,7 @@ public class LoginGUI {
             insertLabels();
             //Botón recibido de iniciar sesión
             JButton boton = insertButton();
-
+            insertTextBox(boton);
 
             panel.setBackground(Color.CYAN);
             //Se agrega el panel a la ventana
@@ -120,15 +120,18 @@ public class LoginGUI {
 
             boton.addActionListener((ActionEvent ae) -> {
                 try {
-
-
                     id_desarrollador = desarrolladorJDBC.validar((String.valueOf(password.getPassword())), correo.getText());
 
                     if(id_desarrollador!=null){
-                        //Cierra la ventana 1
-                        frame.setVisible(false);
-                        //Abre la siguiente ventana AQUI SE PASA EL ID_DESARROLLADOR
-
+                        if(id_desarrollador.equals("1")){
+                            frame.setVisible(false);
+                            AdminGUI app = new AdminGUI();
+                        }else{
+                           //Cierra la ventana 1
+                            frame.setVisible(false);
+                            //Abre la siguiente ventana AQUI SE PASA EL ID_DESARROLLADOR
+                            DesarrolladorGUI desarrolladorGUI =new DesarrolladorGUI(id_desarrollador);
+                        }
                     }
                 } catch (AccesoLoginEx ex) {
                     Logger.getLogger(LoginGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -140,11 +143,6 @@ public class LoginGUI {
             //Hacer rollback sucede cuando, en caso de que falle,
             //no se guardan las modificaciones. Las operaciones no se ejecutan
             JOptionPane.showMessageDialog(null,"La operacion no ha sido ejecutada. (ROLLBACK)");
-            /*try {
-                conexion.rollback();
-            } catch (SQLException ex1) {
-                ex1.printStackTrace(System.out);
-            }*/
         }
     }
 }
