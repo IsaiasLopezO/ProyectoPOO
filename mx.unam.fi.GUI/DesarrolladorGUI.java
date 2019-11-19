@@ -29,6 +29,7 @@ public class DesarrolladorGUI{
     public DesarrolladorGUI(String id_desarrollador){
 
         frame.setSize(1080,720);
+        frame.setBackground(Color.DARK_GRAY);
         frame.setLayout(null);
         frame.setResizable(false);
         panel.setLayout(null);
@@ -54,7 +55,7 @@ public class DesarrolladorGUI{
                 infoAct.setLayout(new FlowLayout(FlowLayout.RIGHT));
                 //X(der, izq),Y(arr,abaj),WIDTH(anchura), HEIGHT(altura)
                 infoAct.setBounds(460,50+contador*150,520,100);
-                infoAct.setBackground(Color.gray);
+                infoAct.setBackground(Color.LIGHT_GRAY);
                 infoAct.add(listasDesplegables(contador));
                 insertLabels(contador, id_desarrollador);
                 frame.add(infoAct);
