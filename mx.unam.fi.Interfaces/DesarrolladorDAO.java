@@ -6,7 +6,6 @@
  */
 package mx.unam.fi.Interfaces;
 
-import java.util.List;
 import mx.unam.fi.PersonasBeans.*;
 import mx.unam.fi.Excepciones.*;
 
@@ -30,9 +29,8 @@ public interface DesarrolladorDAO {
     /**
      * Este metodo permite ver las actividades de cada desarrollador
      * @param id_desarrollador
-     * @param campoAct
-     * @return List de actividades a ver
+     * @return Actividad a ver
      * @throws VerActividadesEx
      */
-    public List<Actividad> verAct(String id_desarrollador, int campoAct) throws VerActividadesEx;
+    public Actividad verAct(String id_desarrollador) throws VerActividadesEx;
 }

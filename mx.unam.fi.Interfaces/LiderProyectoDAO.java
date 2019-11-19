@@ -12,15 +12,6 @@ import mx.unam.fi.Excepciones.*;
 
 public interface LiderProyectoDAO {
     /**
-     * Este metodo valida que los datos de inicio de sesion
-     * coincidan con los de cada desarrollador.
-     * @param email
-     * @param id_desarrollador
-     * @return List resultado de de datos en caso correcto/incorrecto
-     * @throws AccesoLoginEx
-     */
-    public List<Desarrollador> validar(int id_desarrollador, String email) throws AccesoLoginEx;
-    /**
      * Este metodo permite visualizar todos los datos de todos los participantes
      * en el proyecto. En palabras mas tecnicas, es un SELECT hacia la base de datos.
      * @return List es una lista de todos los participantes en el proyecto
@@ -41,4 +32,19 @@ public interface LiderProyectoDAO {
      * @throws CrearActEx
      */
     int crearAct(Actividad actividad) throws CrearActEx;
+    /**
+     * Este metodo permite ver las actividades de cada desarrollador
+     * @param id_desarrollador
+     * @return Actividad a ver
+     * @throws VerActividadesEx
+     */
+    public Actividad verAct(String id_desarrollador) throws VerActividadesEx;
+    /**
+     * Este metodo permite ver un desarrollador en particular
+     * @param id_desarrollador
+     * @return String[][] datos
+     * @throws VerActividadesEx
+     */
+    public Desarrollador verDesarrollador(String id_desarrollador) throws VerActividadesEx;
+
 }
